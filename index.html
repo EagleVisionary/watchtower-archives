@@ -1,9 +1,93 @@
-<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>The Watchtower Archives</title><style>:root{color-scheme:dark;--green:#30e58a;--blue:#4b9cd3;--bg:#07111e;--panel:#0d2030;--muted:#adc4d1}*{box-sizing:border-box}body{margin:0;background:radial-gradient(ellipse at 12% 4%,#0b5a46aa,transparent 45%),radial-gradient(ellipse at 85% 14%,#245a92aa,transparent 40%),#07111e;color:#effbff;font:16px system-ui,sans-serif;min-height:100vh}body:before{content:"";position:fixed;inset:0;pointer-events:none;opacity:.4;background-image:radial-gradient(#fff 1px,transparent 1px);background-size:73px 79px}main{position:relative;max-width:1050px;margin:auto;padding:24px 18px 80px}header{display:flex;align-items:center;justify-content:space-between;gap:12px;border-bottom:1px solid #ffffff30;padding-bottom:20px}.logo{font-size:14px;font-weight:800;letter-spacing:.17em;color:var(--green)}.tag{font-size:12px;color:var(--muted)}h1{font-size:clamp(2rem,6vw,4rem);line-height:1.08;letter-spacing:.08em;margin:55px 0 12px;text-transform:uppercase;background:linear-gradient(95deg,var(--green),var(--blue));color:transparent;background-clip:text}h2{font-size:1.4rem;margin:34px 0 15px}p{color:var(--muted);line-height:1.55}.stats,.categories{display:grid;grid-template-columns:repeat(auto-fit,minmax(175px,1fr));gap:14px}.card{background:#0c2030df;border:1px solid #8edaff40;border-radius:14px;padding:20px;box-shadow:0 8px 28px #0004}.stat{font-size:2rem;font-weight:800;color:var(--green)}.small{font-size:13px;color:var(--muted)}.category{cursor:pointer;text-align:left;color:inherit;font:inherit}.category:hover,.category.active{border-color:var(--green);box-shadow:0 0 20px #20ef8533}.category strong{display:block;font-size:17px}.category span{display:block;margin-top:8px;color:var(--muted);font-size:13px}.progress{height:8px;background:#263c4d;border-radius:20px;overflow:hidden;margin-top:14px}.progress>div{height:100%;background:linear-gradient(90deg,var(--green),var(--blue));transition:width .2s}.movie{display:flex;gap:12px;align-items:flex-start;border-bottom:1px solid #ffffff1c;padding:13px 0}.movie input{width:20px;height:20px;accent-color:#30e58a;flex-shrink:0}.movie label{cursor:pointer;flex:1}.movie label b{display:block}.movie label small{color:var(--muted)}.movie.done label b{text-decoration:line-through;color:#9db8bc}button{cursor:pointer}.notice{background:#153343;border-left:3px solid var(--blue);padding:12px 15px;border-radius:6px;color:#c5dce5;font-size:13px;margin-top:28px}footer{color:#9db7c7;font-size:12px;margin-top:40px}@media(max-width:480px){header{align-items:flex-start;flex-direction:column}h1{margin-top:36px}.card{padding:16px}}</style></head><body><main><header><div class="logo">✦ THE WATCHTOWER ARCHIVES</div><div class="tag">SHADOW COSMIC · PRIVATE MARATHON PROTOTYPE</div></header><h1>The Watchtower<br>Archives</h1><p>Every universe. One journey. A continuity-aware DC animated movie marathon for two.</p><div class="stats"><div class="card"><div class="stat" id="total">0</div><div class="small">Movies in this starter library</div></div><div class="card"><div class="stat" id="watched">0</div><div class="small">Watched</div></div><div class="card"><div class="stat" id="percent">0%</div><div class="small">Completed</div><div class="progress"><div id="overallbar"></div></div></div></div><h2>Explore the multiverse</h2><div class="categories" id="categories"></div><h2 id="sectionTitle">Movies</h2><div class="card" id="movies"></div><div class="notice"><b>Version 0.1.0:</b> Progress is saved only in this browser on this device. Shared progress, sign-in, full movie catalog, and hosting are planned for a later milestone. This starter catalog is deliberately incomplete; do not use its counts as the full marathon total.</div><footer>Unofficial fan-made personal watch tracker. Not affiliated with DC or Warner Bros.</footer></main><script>
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>The Watchtower Archives</title><style>:root{color-scheme:dark;--green:#30e58a;--blue:#4b9cd3;--bg:#07111e;--panel:#0d2030;--muted:#adc4d1}*{box-sizing:border-box}body{margin:0;background:radial-gradient(ellipse at 12% 4%,#0b5a46aa,transparent 45%),radial-gradient(ellipse at 85% 14%,#245a92aa,transparent 40%),#07111e;color:#effbff;font:16px system-ui,sans-serif;min-height:100vh}body:before{content:"";position:fixed;inset:0;pointer-events:none;opacity:.4;background-image:radial-gradient(#fff 1px,transparent 1px);background-size:73px 79px}main{position:relative;max-width:1050px;margin:auto;padding:24px 18px 80px}header{display:flex;align-items:center;justify-content:space-between;gap:12px;border-bottom:1px solid #ffffff30;padding-bottom:20px}.logo{font-size:14px;font-weight:800;letter-spacing:.17em;color:var(--green)}.tag{font-size:12px;color:var(--muted)}h1{font-size:clamp(2rem,6vw,4rem);line-height:1.08;letter-spacing:.08em;margin:55px 0 12px;text-transform:uppercase;background:linear-gradient(95deg,var(--green),var(--blue));color:transparent;background-clip:text}h2{font-size:1.4rem;margin:34px 0 15px}p{color:var(--muted);line-height:1.55}.stats,.categories{display:grid;grid-template-columns:repeat(auto-fit,minmax(175px,1fr));gap:14px}.card{background:#0c2030df;border:1px solid #8edaff40;border-radius:14px;padding:20px;box-shadow:0 8px 28px #0004}.stat{font-size:2rem;font-weight:800;color:var(--green)}.small{font-size:13px;color:var(--muted)}.category{cursor:pointer;text-align:left;color:inherit;font:inherit}.category:hover,.category.active{border-color:var(--green);box-shadow:0 0 20px #20ef8533}.category strong{display:block;font-size:17px}.category span{display:block;margin-top:8px;color:var(--muted);font-size:13px}.progress{height:8px;background:#263c4d;border-radius:20px;overflow:hidden;margin-top:14px}.progress>div{height:100%;background:linear-gradient(90deg,var(--green),var(--blue));transition:width .2s}.movie{display:flex;gap:12px;align-items:flex-start;border-bottom:1px solid #ffffff1c;padding:13px 0}.movie input{width:20px;height:20px;accent-color:#30e58a;flex-shrink:0}.movie label{cursor:pointer;flex:1}.movie label b{display:block}.movie label small{color:var(--muted)}.movie.done label b{text-decoration:line-through;color:#9db8bc}button{cursor:pointer}.notice{background:#153343;border-left:3px solid var(--blue);padding:12px 15px;border-radius:6px;color:#c5dce5;font-size:13px;margin-top:28px}footer{color:#9db7c7;font-size:12px;margin-top:40px}@media(max-width:480px){header{align-items:flex-start;flex-direction:column}h1{margin-top:36px}.card{padding:16px}} .authbar{display:flex;flex-wrap:wrap;gap:9px;align-items:center;margin:22px 0}.authbar input{background:#0d2030;border:1px solid #7ab9d055;border-radius:7px;padding:11px;color:white;min-width:210px}.authbar button{background:#123e47;color:#effbff;border:1px solid #30e58a77;border-radius:7px;padding:11px 15px}.authbar button:disabled{opacity:.5;cursor:not-allowed}.authstatus{font-size:13px;color:var(--muted);width:100%} .hidden{display:none!important}</style></head><body><main><header><div class="logo">✦ THE WATCHTOWER ARCHIVES</div><div class="tag">SHADOW COSMIC · PRIVATE MARATHON PROTOTYPE</div></header><h1>The Watchtower<br>Archives</h1><p>Every universe. One journey. A continuity-aware DC animated movie marathon for two.</p><div class="stats"><div class="card"><div class="stat" id="total">0</div><div class="small">Movies in this starter library</div></div><div class="card"><div class="stat" id="watched">0</div><div class="small">Watched</div></div><div class="card"><div class="stat" id="percent">0%</div><div class="small">Completed</div><div class="progress"><div id="overallbar"></div></div></div></div><section class="card" aria-label="Shared progress sign in"><strong>Shared marathon progress</strong><p id="syncInfo">Configure Supabase to enable private shared tracking.</p><div class="authbar"><input type="email" id="email" placeholder="Email address" autocomplete="email" aria-label="Email address"><input type="password" id="password" placeholder="Password" autocomplete="current-password" aria-label="Password"><button id="signIn">Sign in</button><button id="signOut" class="hidden">Sign out</button><span id="authStatus" class="authstatus" role="status"></span></div></section><h2>Explore the multiverse</h2><div class="categories" id="categories"></div><h2 id="sectionTitle">Movies</h2><div class="card" id="movies"></div><div class="notice"><b>Version 0.1.1:</b> Local progress remains available without sign-in. When Supabase is configured and you sign in, the shared database becomes the source of truth. Existing local checks are not automatically uploaded. Both users must be explicitly authorized by your database policies.</div><footer>Unofficial fan-made personal watch tracker. Not affiliated with DC or Warner Bros.</footer></main><script>
 const groups=[
 {name:'Origins & standalones',description:'Early independent films and mini-continuities',movies:[['Superman: Doomsday',2007],['Justice League: The New Frontier',2008],['Wonder Woman',2009],['Green Lantern: First Flight',2009],['Superman/Batman: Public Enemies',2009],['Justice League: Crisis on Two Earths',2010],['Batman: Under the Red Hood',2010],['Superman/Batman: Apocalypse',2010],['Justice League: Doom',2012]]},
 {name:'DCAMU',description:'Flashpoint to Apokolips War',movies:[['Justice League: The Flashpoint Paradox',2013],['Justice League: War',2014],['Son of Batman',2014],['Justice League: Throne of Atlantis',2015],['Batman vs. Robin',2015],['Batman: Bad Blood',2016],['Justice League vs. Teen Titans',2016],['Justice League Dark',2017],['Teen Titans: The Judas Contract',2017],['Suicide Squad: Hell to Pay',2018],['The Death of Superman',2018],['Reign of the Supermen',2019],['Batman: Hush',2019],['Wonder Woman: Bloodlines',2019],['Justice League Dark: Apokolips War',2020],['Constantine: The House of Mystery',2022]]},
 {name:'Tomorrowverse',description:'A new continuity after the reset',movies:[['Superman: Man of Tomorrow',2020],['Justice Society: World War II',2021],['Batman: The Long Halloween — Part One',2021],['Batman: The Long Halloween — Part Two',2021],['Green Lantern: Beware My Power',2022],['Legion of Super-Heroes',2023],['Justice League: Warworld',2023],['Justice League: Crisis on Infinite Earths — Part One',2024],['Justice League: Crisis on Infinite Earths — Part Two',2024],['Justice League: Crisis on Infinite Earths — Part Three',2024]]},
 {name:'DCAU',description:'Timmverse / Dini-verse',movies:[['Batman: Mask of the Phantasm',1993],['Batman & Mr. Freeze: SubZero',1998],['Batman: Mystery of the Batwoman',2003],['Batman and Harley Quinn',2017],['Justice League vs. the Fatal Five',2019]]},
 {name:'Elseworlds',description:'Alternate takes and standalone universes',movies:[['All-Star Superman',2011],['Batman: Gotham Knight',2008],['Batman: The Dark Knight Returns — Part One',2012],['Batman: The Dark Knight Returns — Part Two',2013],['Justice League: Gods and Monsters',2015],['Batman: Gotham by Gaslight',2018],['Superman: Red Son',2020],['Batman: Soul of the Dragon',2021],['Injustice',2021],['Batman: The Doom That Came to Gotham',2023]]}];
-const all=groups.flatMap(g=>g.movies.map(m=>({id:g.name+'|'+m[0],name:m[0],year:m[1]})));let done={};try{done=JSON.parse(localStorage.getItem('watchtower-progress-v1')||'{}')}catch(e){}let active=1;function render(){const count=all.filter(m=>done[m.id]).length;document.getElementById('total').textContent=all.length;document.getElementById('watched').textContent=count;const pct=Math.round(count/all.length*100);document.getElementById('percent').textContent=pct+'%';document.getElementById('overallbar').style.width=pct+'%';document.getElementById('categories').innerHTML='';groups.forEach((g,i)=>{const b=document.createElement('button');b.className='card category'+(i===active?' active':'');b.innerHTML='<strong>'+g.name+'</strong><span>'+g.description+'</span><div class="progress"><div style="width:'+Math.round(g.movies.filter(m=>done[g.name+'|'+m[0]]).length/g.movies.length*100)+'%"></div></div><span>'+g.movies.filter(m=>done[g.name+'|'+m[0]]).length+' / '+g.movies.length+' watched</span>';b.onclick=()=>{active=i;render()};document.getElementById('categories').append(b)});const g=groups[active];document.getElementById('sectionTitle').textContent=g.name+' · '+g.movies.length+' movies';const list=document.getElementById('movies');list.innerHTML='';g.movies.forEach((m,i)=>{const id=g.name+'|'+m[0];const row=document.createElement('div');row.className='movie'+(done[id]?' done':'');const cb=document.createElement('input');cb.type='checkbox';cb.checked=!!done[id];cb.id='movie-'+i;cb.onchange=()=>{done[id]=cb.checked;try{localStorage.setItem('watchtower-progress-v1',JSON.stringify(done))}catch(e){}render()};const label=document.createElement('label');label.htmlFor=cb.id;const title=document.createElement('b');title.textContent=m[0];const year=document.createElement('small');year.textContent=m[1]+' · '+(i+1)+' of '+g.movies.length;label.append(title,year);row.append(cb,label);list.append(row)})}render();
+// Configure these two public values from Supabase Project Settings. NEVER use a secret/service_role key.
+const SUPABASE_URL = 'https://dybmmnoicspvkcpolznb.supabase.co';
+const SUPABASE_PUBLISHABLE_KEY = 'sb_publishable_W8s4I88aaqEf8tuamOHQPw_edk4qy7S';
+const configured = /^https:\/\/[^ ]+\.supabase\.co$/.test(SUPABASE_URL) && !SUPABASE_PUBLISHABLE_KEY.startsWith('PASTE_');
+const all = groups.flatMap(g => g.movies.map(m => ({id:g.name+'|'+m[0],name:m[0],year:m[1]})));
+let done = {}, active = 1, client = null, signedIn = false, busy = false;
+try { done = JSON.parse(localStorage.getItem('watchtower-progress-v1') || '{}') || {}; } catch(e) {}
+const el = id => document.getElementById(id);
+const status = message => {el('authStatus').textContent=message;};
+function render(){
+ const count=all.filter(m=>done[m.id]).length;
+ el('total').textContent=all.length;el('watched').textContent=count;
+ const pct=Math.round(count/all.length*100);el('percent').textContent=pct+'%';el('overallbar').style.width=pct+'%';
+ el('categories').replaceChildren();
+ groups.forEach((g,i)=>{
+  const watched=g.movies.filter(m=>done[g.name+'|'+m[0]]).length;
+  const b=document.createElement('button');b.className='card category'+(i===active?' active':'');
+  const strong=document.createElement('strong');strong.textContent=g.name;
+  const desc=document.createElement('span');desc.textContent=g.description;
+  const bar=document.createElement('div');bar.className='progress';const fill=document.createElement('div');fill.style.width=Math.round(watched/g.movies.length*100)+'%';bar.append(fill);
+  const detail=document.createElement('span');detail.textContent=watched+' / '+g.movies.length+' watched';b.append(strong,desc,bar,detail);
+  b.onclick=()=>{active=i;render()};el('categories').append(b);
+ });
+ const g=groups[active];el('sectionTitle').textContent=g.name+' · '+g.movies.length+' movies';const list=el('movies');list.replaceChildren();
+ g.movies.forEach((m,i)=>{
+  const id=g.name+'|'+m[0];const row=document.createElement('div');row.className='movie'+(done[id]?' done':'');
+  const cb=document.createElement('input');cb.type='checkbox';cb.checked=!!done[id];cb.disabled=busy;cb.id='movie-'+i;
+  cb.onchange=()=>setWatched(id,cb.checked);
+  const label=document.createElement('label');label.htmlFor=cb.id;const title=document.createElement('b');title.textContent=m[0];const year=document.createElement('small');year.textContent=m[1]+' · '+(i+1)+' of '+g.movies.length;
+  label.append(title,year);row.append(cb,label);list.append(row);
+ });
+}
+async function loadShared(){
+ const {data,error}=await client.from('movie_progress').select('movie_id,watched');
+ if(error)throw error;
+ done={};for(const row of data||[])done[row.movie_id]=row.watched;
+ render();
+}
+async function setWatched(id,value){
+ if(busy)return;
+ const previous=!!done[id];done[id]=value;render();
+ if(!signedIn){localStorage.setItem('watchtower-progress-v1',JSON.stringify(done));return;}
+ busy=true;render();
+ try{
+  const {error}=await client.from('movie_progress').upsert({movie_id:id,watched:value,updated_at:new Date().toISOString()},{onConflict:'movie_id'});
+  if(error)throw error;
+  status('Shared progress saved.');
+ }catch(e){done[id]=previous;status('Save failed: '+e.message);}
+ finally{busy=false;render();}
+}
+async function setSession(session){
+ signedIn=!!session;el('signIn').classList.toggle('hidden',signedIn);el('signOut').classList.toggle('hidden',!signedIn);
+ el('email').classList.toggle('hidden',signedIn);el('password').classList.toggle('hidden',signedIn);
+ if(signedIn){
+  el('syncInfo').textContent='Signed in as '+session.user.email+'. Shared progress is active.';
+  try{await loadShared();status('Shared progress loaded.');}catch(e){status('Cannot read shared progress: '+e.message);}
+ }else{
+  el('syncInfo').textContent='Sign in to view and update shared progress.';
+  try{done=JSON.parse(localStorage.getItem('watchtower-progress-v1')||'{}')||{}}catch(e){done={}}
+  render();status('Local progress is active until you sign in.');
+ }
+}
+async function initialize(){
+ render();
+ if(!configured){el('signIn').disabled=true;status('Supabase setup required: edit the two configuration values in index.html.');return;}
+ try{
+  // Loaded from the official Supabase CDN; no server-side key belongs in this page.
+  const mod=await import('https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/+esm');
+  client=mod.createClient(SUPABASE_URL,SUPABASE_PUBLISHABLE_KEY);
+  const {data,error}=await client.auth.getSession();if(error)throw error;
+  await setSession(data.session);
+  client.auth.onAuthStateChange((_event,session)=>{setTimeout(()=>setSession(session),0)});
+  el('signIn').onclick=async()=>{
+   const email=el('email').value.trim(),password=el('password').value;
+   if(!email||!password){status('Enter your email and password.');return;}
+   el('signIn').disabled=true;status('Signing in...');
+   const {error}=await client.auth.signInWithPassword({email,password});
+   if(error)status('Sign-in failed: '+error.message);
+   el('signIn').disabled=false;
+  };
+  el('signOut').onclick=async()=>{const {error}=await client.auth.signOut();if(error)status('Sign-out failed: '+error.message);};
+ }catch(e){el('signIn').disabled=true;status('Supabase could not initialize: '+e.message);}
+}
+initialize();
 </script></body></html>
+
