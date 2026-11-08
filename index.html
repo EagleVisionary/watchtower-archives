@@ -175,6 +175,27 @@ function render(){
    dateInput.setAttribute('aria-label','Date watched for '+m[0]);
    dateInput.onchange=()=>setWatchedDate(id,dateInput.value);
    dateRow.append(dateLabel,dateInput);details.append(dateRow);
+  const changeDateButton = document.createElement('button');
+changeDateButton.type = 'button';
+changeDateButton.textContent = '📅 Change Date';
+
+changeDateButton.style.background = '#123e47';
+changeDateButton.style.color = '#ffffff';
+changeDateButton.style.border = '1px solid #30e58a';
+changeDateButton.style.borderRadius = '7px';
+changeDateButton.style.padding = '8px 12px';
+changeDateButton.style.cursor = 'pointer';
+
+changeDateButton.addEventListener('click', () => {
+  if (typeof dateInput.showPicker === 'function') {
+    dateInput.showPicker();
+  } else {
+    dateInput.focus();
+    dateInput.click();
+  }
+});
+
+dateRow.append(changeDateButton);
   }
   row.append(cb,details);list.append(row);
  });
