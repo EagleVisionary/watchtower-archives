@@ -22,6 +22,11 @@ h1 {
     -webkit-text-fill-color: #4B9CD3 !important;
     color: #4B9CD3 !important;
 }
+/* Watched-date control appears only for checked movies. */
+.movie .movie-details{flex:1;min-width:0}
+.movie .movie-details label{display:block}
+.watch-date{display:flex;align-items:center;flex-wrap:wrap;gap:9px;margin-top:10px;color:var(--muted);font-size:13px}
+.watch-date input{width:auto;height:auto;max-width:100%;background:#0d2030;color:#effbff;border:1px solid #7ab9d077;border-radius:7px;padding:7px;accent-color:var(--green)}
 </style></head><body><main><header><div class="logo">✦ THE WATCHTOWER ARCHIVES</div><div class="tag">SHADOW COSMIC · PRIVATE MARATHON PROTOTYPE</div></header><h1>The Watchtower<br>Archives</h1><p>Every universe. One journey. A continuity-aware DC animated movie marathon for two.</p><div class="stats"><div class="card"><div class="stat" id="total">0</div><div class="small">Movies in this starter library</div></div><div class="card"><div class="stat" id="watched">0</div><div class="small">Watched</div></div><div class="card"><div class="stat" id="percent">0%</div><div class="small">Completed</div><div class="progress"><div id="overallbar"></div></div></div></div><section class="card" aria-label="Shared progress sign in"><strong>Shared marathon progress</strong><p id="syncInfo">Configure Supabase to enable private shared tracking.</p><div class="authbar"><input type="email" id="email" placeholder="Email address" autocomplete="email" aria-label="Email address"><input type="password" id="password" placeholder="Password" autocomplete="current-password" aria-label="Password"><button id="signIn">Sign in</button><button id="signOut" class="hidden">Sign out</button><span id="authStatus" class="authstatus" role="status"></span></div></section><h2>Explore the multiverse</h2><div class="categories" id="categories"></div><h2 id="sectionTitle">Movies</h2><div class="card" id="movies"></div><div class="notice"><b>Version 0.1.2:</b> Local progress remains available without sign-in. When Supabase is configured and you sign in, the shared database becomes the source of truth. Existing local checks are not automatically uploaded. Both users must be explicitly authorized by your database policies.</div><footer>Unofficial fan-made personal watch tracker. Not affiliated with DC or Warner Bros.</footer></main><script>
 const groups=[
 {name:'Origins & standalones',description:'Early independent films and mini-continuities',movies:[ 
@@ -112,7 +117,11 @@ const SUPABASE_URL = 'https://dybmmnoicspvkcpolznb.supabase.co';
 const SUPABASE_PUBLISHABLE_KEY = 'sb_publishable_W8s4I88aaqEf8tuamOHQPw_edk4qy7S';
 const configured = /^https:\/\/[^ ]+\.supabase\.co$/.test(SUPABASE_URL) && !SUPABASE_PUBLISHABLE_KEY.startsWith('PASTE_');
 const all = groups.flatMap(g => g.movies.map(m => ({id:g.name+'|'+m[0],name:m[0],year:m[1]})));
-let done = {}, active = 1, client = null, signedIn = false, busy = false;
+let done = {}, watchedDates = {}, active = 1, client = null, signedIn = false, busy = false;
+const todayLocal = () => { const d=new Date(); return [d.getFullYear(),String(d.getMonth()+1).padStart(2,'0'),String(d.getDate()).padStart(2,'0')].join('-'); };
+function loadLocalDates(){try{watchedDates=JSON.parse(localStorage.getItem('watchtower-watched-dates-v1')||'{}')||{}}catch(e){watchedDates={}}}
+function saveLocal(){localStorage.setItem('watchtower-progress-v1',JSON.stringify(done));localStorage.setItem('watchtower-watched-dates-v1',JSON.stringify(watchedDates));}
+loadLocalDates();
 try { done = JSON.parse(localStorage.getItem('watchtower-progress-v1') || '{}') || {}; } catch(e) {}
 const el = id => document.getElementById(id);
 const status = message => {el('authStatus').textContent=message;};
@@ -136,25 +145,53 @@ function render(){
   const cb=document.createElement('input');cb.type='checkbox';cb.checked=!!done[id];cb.disabled=busy;cb.id='movie-'+i;
   cb.onchange=()=>setWatched(id,cb.checked);
   const label=document.createElement('label');label.htmlFor=cb.id;const title=document.createElement('b');title.textContent=m[0];const year=document.createElement('small');year.textContent=m[1]+' · '+(i+1)+' of '+g.movies.length;
-  label.append(title,year);row.append(cb,label);list.append(row);
+  label.append(title,year);
+  const details=document.createElement('div');details.className='movie-details';details.append(label);
+  if(done[id]){
+   const dateRow=document.createElement('div');dateRow.className='watch-date';
+   const dateLabel=document.createElement('label');dateLabel.htmlFor='date-'+i;dateLabel.textContent='Date watched:';
+   const dateInput=document.createElement('input');dateInput.type='date';dateInput.id='date-'+i;
+   dateInput.value=watchedDates[id]||'';dateInput.disabled=busy;
+   dateInput.setAttribute('aria-label','Date watched for '+m[0]);
+   dateInput.onchange=()=>setWatchedDate(id,dateInput.value);
+   dateRow.append(dateLabel,dateInput);details.append(dateRow);
+  }
+  row.append(cb,details);list.append(row);
  });
 }
 async function loadShared(){
- const {data,error}=await client.from('movie_progress').select('movie_id,watched');
+ const {data,error}=await client.from('movie_progress').select('movie_id,watched,watched_at');
  if(error)throw error;
- done={};for(const row of data||[])done[row.movie_id]=row.watched;
+ done={};watchedDates={};for(const row of data||[]){done[row.movie_id]=row.watched;if(row.watched && row.watched_at)watchedDates[row.movie_id]=row.watched_at;}
  render();
+}
+async function saveSharedMovie(id){
+ const {error}=await client.from('movie_progress').upsert({
+  movie_id:id,watched:!!done[id],watched_at:done[id]?(watchedDates[id]||null):null,
+  updated_at:new Date().toISOString()
+ },{onConflict:'movie_id'});
+ if(error)throw error;
 }
 async function setWatched(id,value){
  if(busy)return;
- const previous=!!done[id];done[id]=value;render();
- if(!signedIn){localStorage.setItem('watchtower-progress-v1',JSON.stringify(done));return;}
+ const previous=!!done[id],previousDate=watchedDates[id];
+ done[id]=value;
+ if(value){watchedDates[id]=watchedDates[id]||todayLocal();}else{delete watchedDates[id];}
+ if(!signedIn){saveLocal();render();return;}
  busy=true;render();
- try{
-  const {error}=await client.from('movie_progress').upsert({movie_id:id,watched:value,updated_at:new Date().toISOString()},{onConflict:'movie_id'});
-  if(error)throw error;
-  status('Shared progress saved.');
- }catch(e){done[id]=previous;status('Save failed: '+e.message);}
+ try{await saveSharedMovie(id);status('Shared progress and viewing date saved.');}
+ catch(e){done[id]=previous;if(previousDate)watchedDates[id]=previousDate;else delete watchedDates[id];status('Save failed: '+e.message);}
+ finally{busy=false;render();}
+}
+async function setWatchedDate(id,date){
+ if(busy||!done[id])return;
+ if(date && !/^\d{4}-\d{2}-\d{2}$/.test(date)){status('Choose a valid viewing date.');render();return;}
+ const previousDate=watchedDates[id];
+ if(date)watchedDates[id]=date;else delete watchedDates[id];
+ if(!signedIn){saveLocal();render();return;}
+ busy=true;render();
+ try{await saveSharedMovie(id);status('Viewing date saved.');}
+ catch(e){if(previousDate)watchedDates[id]=previousDate;else delete watchedDates[id];status('Date save failed: '+e.message);}
  finally{busy=false;render();}
 }
 async function setSession(session){
@@ -166,6 +203,7 @@ async function setSession(session){
  }else{
   el('syncInfo').textContent='Sign in to view and update shared progress.';
   try{done=JSON.parse(localStorage.getItem('watchtower-progress-v1')||'{}')||{}}catch(e){done={}}
+   loadLocalDates();
   render();status('Local progress is active until you sign in.');
  }
 }
